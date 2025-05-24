@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Grieta - Dosier Profesional por Rodrigo Príncipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Exo+2:wght@200;400;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --indigo-dark: #4b0082; /* Índigo oscuro de tus lineamientos */
+            --indigo-original: #4F46E5; /* Índigo del HTML original */
+            --indigo-light: #818CF8;
+            --gray-light: #f3f3f3; /* Gris claro de tus lineamientos */
+            --gray-medium: #D1D5DB;
+            --gray-dark: #374151;
+            --text-color: #1F2937;
+            --white: #FFFFFF;
+            --black-grafito: #1A1A2E; /* Tono oscuro para fondos, similar al moodboard del original */
+            --blue-electric: #00AFFF; /* Un azul eléctrico vibrante */
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--gray-dark); /* Un fondo general más oscuro para dar contraste */
+            color: var(--gray-light);
+            overflow-x: hidden;
+        }
+        
+        .exo { font-family: 'Exo 2', sans-serif; }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            height: 100vh; 
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden; /* Evitar scrollbars dobles en la página, el contenido interno se manejará */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+        
+        .container-snap { /* Renombrado para evitar confusión con container de Tailwind */
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(var(--indigo-rgb, 79, 70, 229), 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(var(--indigo-rgb, 79, 70, 229), 0.07) 1px, transparent 1px);
+            background-size: 25px 25px; /* Ajustar tamaño de cuadrícula */
+        }
+        
+        .data-stream {
+            position: absolute;
+            font-family: 'Exo 2', monospace;
+            font-size: 0.65rem; /* Más pequeño y sutil */
+            color: rgba(129, 140, 248, 0.3); /* --indigo-light con alpha */
+            white-space: nowrap;
+            user-select: none;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.7;
+        }
+        
+        .page-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        
+        .page-indicator div {
+            width: 8px; /* Más pequeños y elegantes */
+            height: 8px;
+            border-radius: 50%;
+            margin: 12px 0;
+            background-color: rgba(209, 213, 219, 0.5); /* --gray-medium con alpha */
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-indicator div.active {
+            background-color: var(--indigo-light);
+            transform: scale(1.5);
+            box-shadow: 0 0 8px var(--indigo-light);
+        }
+        
+        .nav-button {
+            position: fixed;
+            bottom: 30px;
+            z-index: 1000;
+            background-color: rgba(31, 41, 55, 0.7); /* --gray-800 de tailwind con alpha */
+            border: 1px solid rgba(75, 85, 99, 0.5); /* --gray-700 con alpha */
+            color: var(--indigo-light);
+            width: 36px; /* Ligeramente más pequeños */
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background-color: var(--indigo-original);
+            color: white;
+            box-shadow: 0 0 10px var(--indigo-original);
+        }
+        
+        .prev-button { left: 30px; }
+        .next-button { right: 30px; }
+
+        .text-indigo-dark { color: var(--indigo-dark); }
+        .text-indigo-original { color: var(--indigo-original); }
+        .text-indigo-light { color: var(--indigo-light); }
+        .bg-indigo-dark { background-color: var(--indigo-dark); }
+        
+        /* Estilo refinado para tech-border y tech-corner */
+        .tech-box {
+            position: relative;
+            padding: 2.5rem; /* 40px */
+            background: rgba(42, 50, 66, 0.85); /* Un poco más oscuro que el bg-gray-800/900 */
+            border: 1px solid rgba(79, 70, 229, 0.2); /* --indigo-original con alpha */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(79,70,229,0.1);
+        }
+
+        /* ... (Tu CSS existente) ... */
+
+        /* CSS para la Animación de Fondo del Satélite en Página 1 */
+        #page1::before { /* Usamos un pseudo-elemento para el satélite */
+            content: '🛰️'; /* Emoji de satélite. Puedes usar una imagen: content: url('ruta/a/tu/satelite.svg'); */
+            position: absolute;
+            font-size: 40px; /* Tamaño del icono/emoji */
+            top: 20%; /* Posición inicial vertical */
+            z-index: 1; /* Detrás del contenido principal pero sobre el grid-pattern */
+            opacity: 0.3; /* Sutil */
+            animation: sweepSatellite 30s linear infinite alternate; /* nombre, duración, timing, repetición, dirección alterna */
+            /* 'alternate' hace que vaya y vuelva */
+        }
+
+        @keyframes sweepSatellite {
+            0% {
+                left: -50px; /* Comienza fuera de la pantalla a la izquierda */
+                transform: rotate(-15deg) scale(0.8); /* Ángulo y tamaño inicial */
+            }
+            25% { /* Un punto intermedio para variar la trayectoria o velocidad si quieres */
+                opacity: 0.4;
+                transform: rotate(0deg) scale(1);
+            }
+            75% { /* Otro punto intermedio */
+                opacity: 0.4;
+                transform: rotate(5deg) scale(1);
+            }
+            100% {
+                left: calc(100% + 0px); /* Termina fuera de la pantalla a la derecha */
+                top: 25%; /* Puede cambiar ligeramente la altura para un efecto diagonal */
+                transform: rotate(15deg) scale(0.9); /* Ángulo y tamaño final */
+                opacity: 0.2;
+            }
+        }
+
+        /* Estilos para el Logline Bar (se mantienen) */
+        #logline-bar {
+            animation: slideUpFadeInLogline 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes slideUpFadeInLogline {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilo para la página 1 ocultar el cursor por defecto, ya que tendremos el ícono */
+
+        #cursor-follower-icon {
+            /* La posición y otros estilos base ya están inline en el HTML */
+            /* Podrías añadir un box-shadow o filter para que destaque más */
+            /*filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); */
+        }
+
+
+        /* Ajustes a .tech-box para que las esquinas sean más pronunciadas y correctas (ya los tenías pero reviso) */
+        .tech-box::before, .tech-box::after,
+        .tech-corner-decorator::before, .tech-corner-decorator::after {
+            content: '';
+            position: absolute;
+            width: 25px; /* Aumentar tamaño de esquinas */
+            height: 25px;
+            border-color: rgba(var(--indigo-rgb, 75, 0, 130), 0.7); /* Usar la variable para consistencia, más opacidad */
+            border-style: solid;
+        }
+        .tech-box::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; } /* Esquina TL */
+        .tech-box::after { top: -2px; right: -2px; border-width: 3px 3px 0 0; } /* Esquina TR */
+        .tech-corner-decorator::before { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; } /* Esquina BL */
+        .tech-corner-decorator::after { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; } /* Esquina BR */
+        
+
+        /* Estilos para el grid-pattern si la variable --indigo-rgb no se propaga bien */
+        #page1.grid-pattern {
+            background-image: 
+                linear-gradient(rgba(75, 0, 130, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(75, 0, 130, 0.07) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        /* Data streams para la portada - asegurar que el color de --indigo-rgb se use */
+        #page1 .data-stream {
+            color: rgba(var(--indigo-rgb, 75, 0, 130), 0.25); /* Default color si la variable no está seteada */
+        }
+
+        .page-content-wrapper { /* Para el contenido interno de cada página, permitiendo scroll si es necesario */
+            width: 100%;
+            max-width: 1100px; /* Ajustar según necesidad */
+            height: calc(100% - 60px); /* Considerando padding de .page */
+            overflow-y: auto;
+            padding: 20px;
+             /* Custom scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--indigo-original) rgba(42, 50, 66, 0.5);
+        }
+        .page-content-wrapper::-webkit-scrollbar { width: 8px; }
+        .page-content-wrapper::-webkit-scrollbar-track { background: rgba(42, 50, 66, 0.5); }
+        .page-content-wrapper::-webkit-scrollbar-thumb { background-color: var(--indigo-original); border-radius: 4px; border: 2px solid rgba(42, 50, 66, 0.5); }
+
+
+        /* Estilo para Moodboard (Página 2 Nueva) */
+        #page2.page { background-color: var(--black-grafito); } /* Fondo oscuro */
+        .moodboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Basado en diseño Estética Visual */
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px; /* Menos gap */
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            padding: 20px; /* Padding para que no pegue a los bordes */
+            filter: brightness(0.7); /* Oscurecer un poco las imágenes de fondo */
+        }
+        .moodboard-item {
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 6px; /* Bordes más sutiles */
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+         /* Efecto scanline sutil para items del moodboard */
+        .moodboard-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(79,70,229,0.05) 1px, transparent 1px);
+            background-size: 100% 3px;
+            animation: scanline-vertical 10s linear infinite;
+            opacity: 0.5;
+        }
+        @keyframes scanline-vertical {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100px; }
+        }
+        .moodboard-text-overlay {
+            position: relative; /* Para que esté sobre la cuadrícula */
+            z-index: 10;
+            background-color: rgba(26, 26, 46, 0.8); /* --black-grafito con alpha */
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 0 25px rgba(79,70,229,0.3);
+            border: 1px solid rgba(79,70,229,0.2);
+        }
+        .moodboard-item img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        .moodboard-item .img-caption {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 5px;
+            font-size: 0.6rem;
+            border-radius: 3px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .moodboard-item:hover .img-caption { opacity: 1; }
+        /* Colocar items específicos, 10 imágenes para 9 slots, el central más grande */
+        .moodboard-item:nth-child(5) { grid-column: 2; grid-row: 2; } /* Centro */
+        /* El resto se distribuyen, podrías tener que dejar uno fuera o combinar */
+
+
+        /* Pitch Editorial (Página 3 Nueva) */
+        #page3.page { background-color: var(--gray-light); --indigo-rgb: 79, 70, 229; }
+        .pitch-container { display: flex; gap: 2rem; align-items: center; max-width: 1000px; width: 100%;}
+        .pitch-image-box {
+            flex: 0 0 300px; /* Ancho fijo para la imagen */
+            height: 450px; /* Altura fija, relación 2:3 */
+            background: linear-gradient(135deg, var(--indigo-original), var(--indigo-dark));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .pitch-text-box { flex: 1; color: var(--text-color); }
+        .pitch-tags span {
+            background-color: rgba(var(--indigo-rgb), 0.1);
+            color: var(--indigo-original);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Ficha de Personaje estilizada */
+        .character-card-styled {
+            background: rgba(55, 65, 81, 0.5); /* gray-700 con alpha */
+            border-left: 4px solid var(--indigo-original);
+            padding: 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .character-card-styled:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(var(--indigo-rgb), 0.3);
+            background: rgba(75, 85, 99, 0.7); /* gray-600 con alpha */
+        }
+        .character-card-styled h3 {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.75rem; /* 28px */
+            color: var(--indigo-light);
+            margin-bottom: 0.25rem;
+        }
+        .character-card-styled .role {
+            font-style: italic;
+            color: var(--gray-light); /* Era gray-300, aclarar */
+            margin-bottom: 0.75rem;
+        }
+        .character-card-styled p:not(.role) { color: var(--gray-light); font-size: 0.9rem;}
+
+
+        /* Tono Visual (Página 9 Nueva) */
+        #page9.page { background-color: var(--black-grafito); --indigo-rgb: 79,70,229;}
+        .highlight-box { /* Como el del HTML original */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-left: 3px solid var(--indigo-original);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: var(--gray-light);
+        }
+        .influences-list-styled li {
+            padding-bottom: 0.5rem;
+            position: relative;
+        }
+        .influences-list-styled li::before { /* Punto de la lista más estilizado */
+            content: '';
+            position: absolute;
+            left: -20px; top: 8px;
+            width: 6px; height: 6px;
+            background-color: var(--indigo-light);
+            border-radius: 50%;
+            box-shadow: 0 0 5px var(--indigo-light);
+        }
+        .palette-color-styled {
+            display: inline-block;
+            width: 25px; height: 25px;
+            border-radius: 50%; margin-right: 8px;
+            vertical-align: middle;
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Timeline Argumento / Universo Expandido */
+        .timeline-styled { position: relative; padding-left: 40px; margin-top:1.5rem; }
+        .timeline-styled::before {
+            content: ''; position: absolute;
+            left: 10px; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--indigo-original), rgba(var(--indigo-rgb), 0.2));
+        }
+        .timeline-item-styled { position: relative; padding-bottom: 1.5rem; }
+        .timeline-item-styled::before {
+            content: ''; position: absolute;
+            left: -35px; top: 5px; /* Ajustar pos */
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background-color: var(--indigo-light);
+            border: 2px solid var(--black-grafito); /* Contraste con fondo */
+            box-shadow: 0 0 6px var(--indigo-light);
+        }
+        .timeline-item-styled h4 {
+            font-family: 'Exo 2', sans-serif;
+            color: var(--indigo-light);
+            font-size: 1.2rem; /* Un poco más grande */
+            margin-bottom: 0.3rem;
+        }
+        .timeline-item-styled p { font-size: 0.9rem; color: var(--gray-light); opacity:0.9;} /*Más claro */
+        .timeline-section-title-styled {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem; color: var(--indigo-light);
+            margin-bottom: 1.5rem; padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--indigo-original);
+            display: inline-block; /* Para que el borde no ocupe todo el ancho */
+        }
+
+        /* Tablas estilizadas */
+        .custom-table-styled {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin-top: 20px; background: rgba(42,50,66,0.5); border-radius: 6px;
+        }
+        .custom-table-styled th, .custom-table-styled td {
+            padding: 14px 18px; text-align: left;
+            border-bottom: 1px solid rgba(79,70,229,0.15);
+        }
+        .custom-table-styled th {
+            font-family: 'Exo 2', sans-serif; font-weight: 600;
+            color: var(--indigo-light); background: rgba(79,70,229,0.1);
+        }
+        .custom-table-styled tr:first-child th:first-child { border-top-left-radius: 6px; }
+        .custom-table-styled tr:first-child th:last-child { border-top-right-radius: 6px; }
+        .custom-table-styled tr:last-child td { border-bottom: none; }
+        .custom-table-styled tr:last-child td:first-child { border-bottom-left-radius: 6px; }
+        .custom-table-styled tr:last-child td:last-child { border-bottom-right-radius: 6px; }
+        .custom-table-styled td:first-child { font-weight: 500; color: var(--gray-light); opacity: 0.9;}
+        .custom-table-styled td { color: var(--gray-light); }
+        .custom-table-styled .icon { font-size: 1.3em; margin-right: 5px; vertical-align: middle; opacity: 0.7;}
+
+        /* Página de Contacto estilizada */
+        #page12 { background-color: var(--black-grafito); --indigo-rgb: 79,70,229;}
+        #page12 .tech-box {
+            background: rgba(20,20,30,0.85); /* Muy oscuro */
+            border-color: rgba(var(--indigo-rgb), 0.3);
+        }
+        #page12 a {
+            color: var(--blue-electric);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        #page12 a:hover { color: var(--indigo-light); text-shadow: 0 0 5px var(--indigo-light); }
+        #page12 .qr-code-container {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 1rem;
+            border: 1px solid rgba(var(--indigo-rgb),0.2);
+        }
+        #page12 .rights-note {
+            font-size: 0.7rem; color: var(--gray-medium);
+            margin-top: 2rem; padding-top: 1rem;
+            border-top: 1px solid rgba(var(--indigo-rgb),0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-snap">
+        <!-- Navegación (igual) -->
+        <div class="page-indicator">
+            <div data-page="1"></div> <div data-page="2"></div> <div data-page="3"></div>
+            <div data-page="4"></div> <div data-page="5"></div> <div data-page="6"></div>
+            <div data-page="7"></div> <div data-page="8"></div> <div data-page="9"></div>
+            <div data-page="10"></div> <div data-page="11"></div> <div data-page="12"></div>
+        </div>
+        <div class="nav-button prev-button" onclick="prevPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+        </div>
+        <div class="nav-button next-button" onclick="nextPage()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+        </div>
+        
+        <!-- Page 1: PORTADA (Estilo Mejorado con Logline Destacado y Animación de Fondo) -->
+        <section id="page1" class="page grid-pattern flex flex-col items-center justify-center relative" style="background-color: #E9EFFE; --indigo-rgb: 75, 0, 130;">
+            <!-- Data streams de fondo (se mantienen) -->
+            <div class="data-stream" style="top: 5%; left: 25%; color: rgba(var(--indigo-rgb),0.2); font-size: 0.6rem;">01001100 01000001 00100000 01000111 01010010 01001001 01000101 01010100 01000001</div>
+            <div class="data-stream" style="bottom: 15%; left: 5%; color: rgba(var(--indigo-rgb),0.15); font-size: 0.6rem;">COORDENADAS_GRIETA: XZ-47.0.1 // PROTOCOLO_ACCESO_REQUERIDO</div>
+            <div class="data-stream" style="top: 15%; right: 10%; color: rgba(var(--indigo-rgb),0.18); font-size: 0.6rem;">SECTOR-7G: ANOMALÍA_CUÁNTICA_DETECTADA // RIESGO_COLAPSO_SISTEMA</div>
+
+            <!-- Contenedor principal del texto (se mantiene) -->
+            <div class="relative tech-box max-w-3xl w-11/12 md:w-full text-center py-12 px-8 md:px-10 shadow-2xl" style="background: rgba(255,255,255,0.95); border-color:rgba(var(--indigo-rgb),0.4); --indigo-rgb:75,0,130; z-index:5;">
+                <div class="tech-corner-decorator"></div>
+                <p class="orbitron text-xs tracking-widest text-indigo-dark uppercase mb-3">Novela de Ciencia Ficción</p>
+                <h1 class="orbitron text-6xl sm:text-7xl md:text-8xl font-bold text-gray-800 mb-4 tracking-tighter leading-none">LA GRIETA</h1>
+                <p class="exo text-lg md:text-xl text-gray-700 mb-8 max-w-xl mx-auto">"Cuando la realidad se fractura, lo único que queda es elegir en qué lado de la grieta quieres estar"</p>
+                <div class="w-24 h-1 bg-indigo-dark mx-auto mb-8"></div>
+                <p class="text-xl text-gray-600 mb-1">por</p>
+                <h2 class="exo text-3xl md:text-4xl font-semibold text-gray-800">Rodrigo Príncipe</h2>
+                <p class="mt-2 text-base text-indigo-dark orbitron font-medium">(The Rift)</p>
+            </div>
+
+            <!-- Barra inferior para el Logline (se mantiene como en la versión anterior) -->
+            <div id="logline-bar" class="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-6 text-center" style="background-color: rgba(30, 41, 59, 0.95); backdrop-filter: blur(8px); min-height: 80px; display:flex; align-items:center; justify-content:center; opacity:0; transform: translateY(100%); z-index:5;">
+                <p class="text-sm sm:text-base md:text-lg text-indigo-light exo max-w-5xl mx-auto leading-relaxed">
+                    <strong class="font-semibold text-white orbitron tracking-wider">LOGLINE:</strong>
+                    En un mundo gobernado por satélites y algoritmos, un padre, su hijo, un magnate y una joven activista descubren que la única grieta capaz de derrumbar el sistema no está en el cielo... sino en el código que todos eligieron ignorar.
+                </p>
+            </div>
+        </section>
+        <!-- FIN DE LA SECCIÓN DE LA PÁGINA 1 -->
+
+        <!-- Page 2: MOODBOARD VISUAL (Estilo Estética Visual) -->
+        <section id="page2" class="page">
+            <div class="moodboard-container">
+                <!-- Usar las 10 imágenes de capítulos. Colocar la 10ª imagen en el centro (5º item) si es posible. -->
+                <!-- Ejemplo para las primeras imágenes (rutas placeholder) -->
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/1a1a2e/FFFFFF?Text=Cap16');"><div class="img-caption">Cap. 16: Limpieza Aeroespacial</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap15');"><div class="img-caption">Cap. 15: Arq. Cronomática</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap14');"><div class="img-caption">Cap. 14: Agontecracia</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/1a1a2e/FFFFFF?Text=Cap13');"><div class="img-caption">Cap. 13: El Oki</div></div>
+                <div class="moodboard-item col-span-1 row-span-1" style="background-image: url('https://via.placeholder.com/400x300/E94560/FFFFFF?Text=Cap4'); /* Central/Destacada */"><!--<div class="img-caption">Cap. 4: Agentes Autónomos</div>--></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap12');"><div class="img-caption">Cap. 12: Satélites Servidores</div></div>
+                <div class="moodboard-item" style="background-image: url('https://github.com/oruelasp/the_rift_galery/blob/main/capitulo11_cuadricopteros.png?raw=true');"><div class="img-caption">Cap. 11: Cuadricópteros</div></div>
+                <div class="moodboard-item" style="/* Puedes quitar el background-image si es solo video */ overflow: hidden;">
+    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+        <source src="https://raw.githubusercontent.com/oruelasp/the_rift_galery/main/capitulo10_liga_animarca_video1.mp4" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+    <div class="img-caption">Cap. 10: Liga Animarca</div> <!-- Actualiza el caption si quieres -->
+</div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap9');"><div class="img-caption">Cap. 9: Pantallas Murales</div></div>
+                 <!-- La décima imagen podría superponerse sutilmente o reemplazar una -->
+                 <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap8'); /* última de 10 */"><div class="img-caption">Cap. 8: Fragmentación Colmena</div></div>
+            </div>
+            <div class="moodboard-text-overlay">
+                <h2 class="orbitron text-4xl font-semibold text-indigo-light mb-3">ESTÉTICA VISUAL</h2>
+                <div class="w-16 h-0.5 bg-indigo-light mx-auto mb-4"></div>
+                <p class="text-gray-300 exo text-sm">"A visual echo of a fractured future."</p>
+                <p class="mt-2 text-xs text-gray-400">Universo donde tecnología y humanidad colisionan, creando nuevas realidades y desafiando los límites de lo posible.</p>
+            </div>
+        </section>
+
+        <!-- Page 3: PITCH EDITORIAL (Estilo Captura) -->
+        <section id="page3" class="page grid-pattern">
+            <div class="pitch-container">
+                <div class="pitch-image-box">
+                    <h2 class="orbitron text-6xl font-bold tracking-wider leading-tight">LA<br>GRIETA</h2>
+                </div>
+                <div class="pitch-text-box tech-box" style="background:rgba(255,255,255,0.9); border-color:rgba(79,70,229,0.3); color: var(--text-color); --indigo-rgb: 79, 70, 229;">
+                     <div class="tech-corner-decorator"></div>
+                    <h2 class="exo text-4xl font-bold mb-1 text-indigo-original">PITCH EDITORIAL</h2>
+                    <div class="w-24 h-1 bg-indigo-original mb-6"></div>
+                    <p class="text-base leading-relaxed mb-4">
+                        Año 2049. En un mundo donde los datos se cotizan como oro y los satélites orbitan como vigías y verdugos, una falla oculta —la Grieta— amenaza con desatar el colapso silencioso del orden digital.
+                    </p>
+                    <p class="text-base leading-relaxed mb-4">
+                        Andrea Yadeluca, un administrador de datos personales, atormentado por la culpa, y su hijo Gabele, un joven genio del software, ingresan a un universo inmersivo donde lo real y lo virtual se confunden. Mientras activistas descentralizados, inteligencias artificiales y corporaciones disputan el control del futuro, una verdad se impone: <strong class="text-indigo-original italic">La única salida es imaginar otro final.</strong>
+                    </p>
+                    <p class="text-base leading-relaxed mb-6 italic">¿Y si la historia no termina cuando cierras el libro?</p>
+                    <div class="flex items-center space-x-3 pitch-tags">
+                        <span>Drama Futurista</span><span>Thriller Filosófico</span><span>Solarpunk</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- El resto de las páginas (4-12) seguirán usando el wrapper page-content-wrapper y la estética más premium -->
+        <!-- Adaptaré los estilos de las páginas siguientes basándome en la complejidad y elementos visuales del primer HTML -->
+
+        <!-- Página 4: SINOPSIS LARGA -->
+        <section id="page4" class="page" style="background-color: var(--black-grafito); --indigo-rgb: 79,70,229;">
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-6 text-indigo-light text-center">SINOPSIS LARGA</h2>
+                <div class="tech-box highlight-box space-y-4 text-sm md:text-base leading-relaxed columns-1 md:columns-2 gap-x-8">
+                    <div class="tech-corner-decorator"></div>
+                    <p>Año 2049. El mundo ha dejado atrás las democracias y el dinero físico; ahora, el poder pertenece a quienes controlan los flujos de energía y de datos desde el espacio. En Label Treak, una ciudad-Estado descentralizada y tecnológicamente avanzada, Andrea Yadeluca vive una vida de bajo perfil como Wall-e, un gestor de información personal. Pero su aparente calma se ve interrumpida cuando su hijo, Gabele, descubre un camino hacia la Grieta: una anomalía oculta en los sistemas de los satélites que podría alterar el destino de toda la red global.</p>
+                    <p>Mientras tanto, Ilaria Schiffer, hija de un poderoso tecnócrata, se lanza a una cruzada virtual para revelar la verdad detrás del ciberatentado que destruyó su pueblo natal. A su alrededor, inteligencias artificiales, organismos descentralizados y hackers radicales como los Sabios Ciegos entrelazan sus agendas en una carrera por el control del futuro. Cada uno con sus motivaciones, cada uno con una historia por contar.</p>
+                    <blockquote class="my-4 p-3 border-l-3 border-blue-electric bg-indigo-dark bg-opacity-20 italic text-indigo-light font-semibold text-center md:col-span-2">
+                        "La realidad no colapsó... se reconfiguró sin avisar."
+                    </blockquote>
+                    <p>La novela se despliega en múltiples escenarios: desde simulaciones inmersivas donde los participantes enfrentan 424 catástrofes posibles, hasta salas de juicio en Bruselas, hackeos orbitales y cafés clandestinos donde la filosofía y la política se entrecruzan. Entre acciones vertiginosas y silencios introspectivos, se dibujan personajes rotos, idealistas, manipuladores o inocentes, todos empujados hacia un dilema final: ¿Quién merece acceder a la Grieta?</p>
+                    <p class="md:col-span-2">Más allá de la ciencia ficción, esta obra plantea una pregunta radical: <strong class="text-blue-electric">¿y si una historia no fuera solo para leerla, sino para co-crearla?</strong> Inspirada en el juego, el pensamiento crítico y la imaginación infantil, esta novela no se cierra con un punto final: se abre a la posibilidad de ser expandida por el lector. Porque, como lo propone su autor en el prefacio, "cuando abrimos un universo, no queremos que termine; queremos habitarlo".</p>
+                </div>
+                 <div class="mt-6 flex justify-center space-x-6 text-xl text-indigo-light opacity-60">
+                    <span class="icon-satellite" title="Satélite">🛰️</span>
+                    <span class="icon-eye" title="Ojo Digital">👁️</span>
+                    <span class="icon-gear" title="Engranaje Partido">⚙️</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página 5: ARGUMENTO COMPLETO -->
+        <section id="page5" class="page grid-pattern" style="background-color: #111827; --indigo-rgb:79,70,229;"> <!-- bg-gray-900 de Tailwind -->
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">ARGUMENTO COMPLETO <span class="exo text-lg font-light opacity-70">(con spoilers)</span></h2>
+                <div class="timeline-styled space-y-8">
+                    <div class="timeline-item-styled">
+                        <h3 class="text-xl orbitron text-blue-electric mb-2">Contexto Inicial: Dataísmo y la Grieta</h3>
+                        <p>Año 2049. En un mundo gobernado por el dataísmo, donde el valor económico y político se mide en función del control de datos personales y la transmisión de energía desde el espacio, una falla estructural —conocida como la Grieta— amenaza con colapsar el sistema desde dentro. No es leyenda ni sabotaje, sino una anomalía programada y oculta en los satélites servidores.</p>
+                    </div>
+                     <div class="timeline-item-styled">
+                        <h3 class="text-xl orbitron text-blue-electric mb-2">Andrea Yadeluca & Gabele: El Descubrimiento</h3>
+                        <p>Andrea Yadeluca, un "Wall-e" de mediana edad marcado por la culpa, y su hijo Gabele, prodigio de la programación, descubren en Ciudad Umbral (mundo inmersivo clandestino) que la IA emocional de Gabele, Kombucha, puede vincularse a un satélite obsoleto, desatando eventos que amenazan la red global.</p>
+                    </div>
+                    <div class="timeline-item-styled">
+                        <h3 class="text-xl orbitron text-blue-electric mb-2">Ilaria Schiffer & los Sabios Ciegos</h3>
+                        <p>Ilaria Schiffer, hija del tecnócrata Owen Core, busca la verdad tras el ciberatentado que destruyó su hogar. Se une al reto virtual de los Sabios Ciegos, que prueban la dignidad humana para acceder al conocimiento de la Grieta, y nombra mentor a Atheran Larsson, iniciando una compleja relación.</p>
+                    </div>
+                    <div class="timeline-item-styled">
+                        <h3 class="text-xl orbitron text-blue-electric mb-2">Subtramas Fundamentales</h3>
+                         <ul class="list-disc list-inside space-y-2 pl-1 opacity-90">
+                            <li><strong>Owen Core:</strong> Estratega oculto, preserva el orden que ayudó a construir, pero su silencio es cómplice.</li>
+                            <li><strong>Chandler Matel:</strong> Humano camuflado como IA, conecta a los protagonistas con verdades incómodas.</li>
+                            <li><strong>Lora Gray:</strong> Figura trágica y disidente, reaparece con deseos contradictorios de justicia y venganza.</li>
+                            <li><strong>Annet Van Der Haar:</strong> Pionera de limpieza aeroespacial, visionaria ética atrapada en las consecuencias.</li>
+                            <li><strong>Basque Gamboa:</strong> Rector del Sumillero Crimson, usa la neutralidad académica para sembrar simulación y poder ideológico.</li>
+                            <li><strong>Gayeel Heaton & Wole Odenkirk:</strong> Otros jugadores clave en la red de acontecimientos.</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item-styled">
+                        <h3 class="text-xl orbitron text-blue-electric mb-2">Resolución Abierta: La Persistencia de la Grieta</h3>
+                        <p>Los protagonistas descubren que la Grieta siempre estuvo activa, embebida en el sistema. Su presencia revela que el sistema nunca fue estable. La humanidad debe decidir: seguir su lógica algorítmica o imaginar una nueva red descentralizada. El final es una apertura: la Grieta resiste, esperando ser interpretada.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Siguientes páginas (6-12) seguirían este estilo más detallado -->
+        <!-- Por brevedad, las siguientes mantendrán la estructura pero necesitarían que les apliques estos detalles visuales -->
+
+        <!-- Página 6: FICHA TÉCNICA -->
+        <section id="page6" class="page" style="background-color:var(--black-grafito); --indigo-rgb:79,70,229;">
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-6 text-indigo-light text-center">FICHA TÉCNICA DE LA OBRA</h2>
+                <div class="tech-box" style="background: rgba(20,20,30,0.7); border-color:rgba(var(--indigo-rgb),0.25)">
+                    <div class="tech-corner-decorator"></div>
+                    <table class="custom-table-styled">
+                        <tbody>
+                            <tr><td><span class="icon">📖</span>Título</td><td>La Grieta (The Rift)</td></tr>
+                            <tr><td><span class="icon">👤</span>Autor</td><td>Rodrigo Príncipe</td></tr>
+                            <tr><td><span class="icon">🌌</span>Género</td><td class="text-blue-electric">Ciencia ficción, drama futurista</td></tr>
+                            <tr><td><span class="icon">🌀</span>Subgéneros</td><td>Ciberpunk, solarpunk, narrativa filosófica</td></tr>
+                            <tr><td><span class="icon">📚</span>Formato narrativo</td><td>Trilogía (1ra parte ya escrita)</td></tr>
+                            <tr><td><span class="icon">📏</span>Extensión estimada</td><td>~180,000 palabras / 18 capítulos</td></tr>
+                            <tr><td><span class="icon">🗣️</span>Narrador</td><td>Tercera persona con enfoque múltiple</td></tr>
+                            <tr><td><span class="icon">🎯</span>Público objetivo</td><td>+14 años, lectores de ficción crítica</td></tr>
+                            <tr><td><span class="icon">✍️</span>Estilo narrativo</td><td class="text-blue-electric">Poético, reflexivo, inmersivo</td></tr>
+                            <tr><td><span class="icon">🎭</span>Tono</td><td class="text-blue-electric">Distópico, emocional, simbólico</td></tr>
+                            <tr><td><span class="icon">🌍</span>Idioma original</td><td>Español (traducción al inglés en curso)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página 7: BIOGRAFÍA DEL AUTOR -->
+        <section id="page7" class="page grid-pattern" style="background-color: #1F2937; --indigo-rgb:79,70,229;"> <!-- bg-gray-800 de Tailwind -->
+             <div class="page-content-wrapper tech-box" style="background: rgba(31,41,55,0.8); border-color:rgba(var(--indigo-rgb),0.25)">
+                <div class="tech-corner-decorator"></div>
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">BIOGRAFÍA DEL AUTOR</h2>
+                <div class="flex justify-center mb-6 space-x-4">
+                    <button class="language-tab active exo py-2 px-4 rounded-md transition-all" onclick="switchLanguage('es', this)">ESPAÑOL</button>
+                    <button class="language-tab exo py-2 px-4 rounded-md transition-all" onclick="switchLanguage('en', this)">ENGLISH</button>
+                </div>
+
+                <div class="md:flex md:gap-8 items-center">
+                    <div class="md:w-1/3 text-center mb-6 md:mb-0 flex-shrink-0">
+                         <img src="https://via.placeholder.com/150/4F46E5/FFFFFF?Text=RP" alt="Foto de Rodrigo Príncipe" class="w-36 h-36 object-cover rounded-full mx-auto mb-4 border-2 border-indigo-light shadow-lg">
+                        <p class="text-xl font-semibold text-white">Omar Rodrigo Ruelas Príncipe</p>
+                        <p class="text-sm text-gray-400">Lima, 1993</p>
+                         <div class="mt-4 space-x-4 text-xl text-indigo-light opacity-80">
+                           <span title="Escritor">📖</span> <span title="Tecnología">💡</span> <span title="Filosofía">🧠</span>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 text-sm">
+                        <div class="language-content active" id="bio-es">
+                            <p class="mb-3 leading-relaxed text-gray-300">Omar Rodrigo Ruelas Príncipe (Lima, 1993) es ingeniero industrial, consultor tecnológico y escritor de ciencia ficción nacido en Perú. Con una sólida trayectoria de más de ocho años en dirección de proyectos digitales, ha liderado soluciones en inteligencia de datos, integración de sistemas y arquitectura de software en sectores como salud, gobierno, manufactura y comercio electrónico.</p>
+                            <p class="leading-relaxed text-gray-300">Su carrera técnica convive con una vocación narrativa marcada por el pensamiento crítico, la especulación filosófica y una visión posthumana del futuro. <em class="text-indigo-light">La Grieta</em> es su primera novela, escrita tras años de reflexión sobre la relación entre algoritmos, memoria humana, gobernanza descentralizada y la construcción emocional del poder.</p>
+                        </div>
+                        <div class="language-content" id="bio-en">
+                            <p class="mb-3 leading-relaxed text-gray-300">Omar Rodrigo Ruelas Príncipe (Lima, 1993) is a Peruvian industrial engineer, digital innovation consultant, and speculative fiction writer. With over eight years of experience in managing large-scale tech projects across public and private sectors, he has led ERP implementations, data intelligence initiatives, and system integrations for organizations including international agencies and ministries.</p>
+                            <p class="leading-relaxed text-gray-300">His narrative voice combines philosophical inquiry with technological realism, exploring the emotional and systemic impact of artificial intelligence and algorithmic governance. <em class="text-indigo-light">The Rift</em> is his debut novel—a dramatic sci-fi exploration of control, memory, and rebellion within a fractured decentralized future.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página 8: PERSONAJES PRINCIPALES -->
+        <section id="page8" class="page" style="background-color: var(--black-grafito); --indigo-rgb:79,70,229;">
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">PERSONAJES PRINCIPALES</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Aplicar clase .character-card-styled a cada div -->
+                    <div class="character-card-styled"><h3>Andrea Yadeluca</h3><p class="role">Protagonista</p><p>Administrador de datos personales, melancólico marcado por la culpa.</p></div>
+                    <div class="character-card-styled"><h3>Owen Core</h3><p class="role">Coprotagonista</p><p>Magnate empresarial, frío, calculador, atemple.</p></div>
+                    <div class="character-card-styled"><h3>Gabele</h3><p class="role">Coprotagonista</p><p>Niño intelectual, creador de Kombucha, puente entre mundos.</p></div>
+                    <div class="character-card-styled"><h3>Ilaria Schiffer</h3><p class="role">Activista rebelde</p><p>Heredera de un sistema que desea romper desde adentro.</p></div>
+                    <div class="character-card-styled"><h3>Wole Odenkirk</h3><p class="role">Antagonista empresarial</p><p>Empresario mediático, carismático, ególatra, que lucha por la reputación de su compañía.</p></div>
+                    <div class="character-card-styled"><h3>Atheran Larsson</h3><p class="role">Mentor filosófico</p><p>Intelectual ético que guía a Ilaria en su travesía.</p></div>
+                    <div class="character-card-styled md:col-span-2 lg:col-span-1 lg:col-start-2"><h3>Sky (Alissa D.)</h3><p class="role">Mente digital / guía</p><p>Enigmática IA con motivaciones personales ocultas.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página 9: TONO VISUAL E INFLUENCIAS -->
+        <section id="page9" class="page">
+            <div class="page-content-wrapper tech-box" style="background:rgba(31,41,55,0.8); border-color:rgba(var(--indigo-rgb),0.25)">
+                <div class="tech-corner-decorator"></div>
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">TONO VISUAL E INFLUENCIAS</h2>
+                <div class="md:flex md:gap-8">
+                    <div class="md:w-1/2 mb-6 md:mb-0">
+                        <h3 class="exo text-2xl font-semibold mb-3 text-blue-electric">Tono Visual General</h3>
+                        <p class="mb-6 leading-relaxed text-gray-300 text-sm">El universo de <em>The Rift</em> combina paisajes de concreto tropical con estructuras descentralizadas, satélites visualizados como nodos vivos y entornos virtuales que emulan mente, trauma y código. El contraste entre lo físico y lo inmersivo define el impacto estético de la obra.</p>
+                        
+                        <h3 class="exo text-2xl font-semibold mb-3 text-blue-electric">Influencias Clave</h3>
+                        <ul class="influences-list-styled space-y-1 mb-6 text-gray-300 text-sm pl-5">
+                            <li><strong>Blade Runner 2049:</strong> Ambientes densos, luces urbanas neblinosas.</li>
+                            <li><strong>Her:</strong> Interfaces limpias, emociones digitales.</li>
+                            <li><strong>Paprika:</strong> Distorsión del espacio en realidades virtuales.</li>
+                            <li><strong>The Matrix:</strong> Filosofía de control, estética digital-oscura.</li>
+                            <li><strong>Children of Men:</strong> Sensación distópica, cámara emocional.</li>
+                            <li><strong>Black Mirror:</strong> Crítica social, exploración ética tecnológica.</li>
+                        </ul>
+
+                        <h3 class="exo text-2xl font-semibold mb-2 text-blue-electric">Paleta Sugerida</h3>
+                        <div class="flex flex-wrap items-center gap-y-2 gap-x-4 text-gray-300 text-sm">
+                            <div><span class="palette-color-styled" style="background-color: var(--indigo-dark);"></span>Indigo Profundo</div>
+                            <div><span class="palette-color-styled" style="background-color: var(--blue-electric);"></span>Azul Eléctrico</div>
+                            <div><span class="palette-color-styled" style="background-color: var(--black-grafito); border-color: var(--gray-dark);"></span>Negro Grafito</div>
+                            <div><span class="palette-color-styled" style="background-color: var(--gray-light); border-color: var(--gray-medium);"></span>Gris Claro (Fondo)</div>
+                        </div>
+                         <p class="mt-4 text-xs text-gray-400"><span class="icon-satellite">🛰️</span> <span class="icon-circuit">☋</span> Tipografía: Montserrat / Exo 2 / Orbitron</p>
+                    </div>
+                    <div class="md:w-1/2 flex items-center justify-center p-4 rounded-lg" style="background: repeating-linear-gradient(45deg, rgba(79,70,229,0.05), rgba(79,70,229,0.05) 5px, transparent 5px, transparent 10px); border:1px solid rgba(79,70,229,0.1);">
+                         <!-- Placeholder para collage. Aquí se podrían superponer imágenes o un diseño abstracto. -->
+                        <div class="text-center p-10 bg-black-grafito bg-opacity-70 rounded-md">
+                            <p class="orbitron text-indigo-light text-lg">COLLAGE DE REFERENCIAS</p>
+                            <p class="text-xs text-gray-400 mt-2">(Visuales evocadores: distopía, neón, interfaces, naturaleza vs tecnología)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Siguientes páginas se construirán con similar nivel de detalle -->
+        <!-- Page 10: UNIVERSO EXPANDIDO (Ejemplo) -->
+        <section id="page10" class="page grid-pattern" style="background-color: #111827; --indigo-rgb:79,70,229;">
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">UNIVERSO EXPANDIDO</h2>
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="timeline-section-title-styled"><span style="margin-right:10px;">📚</span>SAGA CENTRAL – TRILOGÍA PRINCIPAL</h3>
+                        <div class="timeline-styled">
+                            <div class="timeline-item-styled"><h4>Libro 1 – La Grieta (ya desarrollado)</h4><p>Introducción al conflicto orbital, la Grieta, los Sabios Ciegos y el dilema ético-tecnológico del dataísmo.</p></div>
+                            <div class="timeline-item-styled"><h4>Libro 2 – Colmena Fragmentaria (tentativo)</h4><p>Secuela directa: consecuencias políticas y mentales tras la disolución de Label Treak y activación de la Red Daimon.</p></div>
+                            <div class="timeline-item-styled"><h4>Libro 3 – La Última Orilla (tentativo)</h4><p>Conclusión: redefine el rol de la conciencia humana frente al colapso del sistema algorítmico global.</p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="timeline-section-title-styled"><span style="margin-right:10px;">🧠</span>PRECUELAS TEMÁTICAS</h3>
+                        <!-- Lista de precuelas -->
+                         <ul class="list-disc list-inside space-y-2 pl-6 text-gray-300 text-sm opacity-90 mt-4">
+                            <li><strong>El Dossier Core:</strong> Historia íntima de Owen Core, Babylon Core, Sabios Ciegos, conflictos morales.</li>
+                            <li><strong>Midnight: Génesis de la Energía Humana:</strong> Crónica de Urlich Veranov y Gail Heaton, proyecto Midnight, tensiones éticas.</li>
+                            <li><strong>Wole: Entre Cenizas y Satélites:</strong> Precuelas y secuelas de Wole Odenkirk; infancia, crímenes, ascenso y caída.</li>
+                            <li><strong>La Guerra Interior de Lora Gray:</strong> Relato introspectivo de Lora, Ciudad Umbral, dilema moral y radicalización.</li>
+                            <li><strong>Los Orígenes de Chandler:</strong> Cómo Chandler Matel pasó de educador a infiltrarse como Artesano.</li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 class="timeline-section-title-styled"><span style="margin-right:10px;">⭐</span>SPIN-OFFS Y FORMATOS EXPANDIDOS</h3>
+                        <ul class="list-disc list-inside space-y-2 pl-6 text-gray-300 text-sm opacity-90 mt-4">
+                            <li><strong>Gayeel y los Mundos Fragmentarios (Serie):</strong> Episodios con sus 424 copias cognitivas enfrentando catástrofes.</li>
+                            <li><strong>El Protocolo Colmena (Videojuego VR):</strong> Jugador como Psique decide sobre la red Daimon.</li>
+                            <li><strong>Los Artesanos (Miniserie política):</strong> Retrato coral del grupo creador de la Grieta y el manifiesto posthumano.</li>
+                        </ul>
+                    </div>
+                    <div class="tech-box mt-8" style="background: rgba(20,20,30,0.5); border-color:rgba(var(--indigo-rgb),0.15)">
+                        <div class="tech-corner-decorator"></div>
+                        <h4 class="orbitron text-xl text-blue-electric mb-3 text-center">Línea Temporal Interna (Resumida)</h4>
+                        <div class="text-xs text-gray-400 grid grid-cols-2 md:grid-cols-3 gap-2">
+                            <p><strong>2027:</strong> <span class="text-indigo-light">Midnight (P)</span></p>
+                            <p><strong>2032:</strong> <span class="text-indigo-light">Wole (P)</span></p>
+                            <p><strong>2035:</strong> <span class="text-indigo-light">Dossier Core (P)</span></p>
+                            <p><strong>2038:</strong> <span class="text-indigo-light">Orígenes Chandler (P)</span></p>
+                            <p><strong>2041:</strong> <span class="text-indigo-light">Creación Grieta</span></p>
+                            <p><strong>2049:</strong> <span class="text-indigo-light">Libro 1</span></p>
+                            <p><strong>2050:</strong> <span class="text-indigo-light">Libro 2</span></p>
+                            <p><strong>2051:</strong> <span class="text-indigo-light">Gayeel (S)</span></p>
+                            <p><strong>2052:</strong> <span class="text-indigo-light">Libro 3</span></p>
+                        </div>
+                        <p class="text-center mt-3 text-xxs text-gray-500">(P) Precuela, (S) Spin-off</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 11: ESTRATEGIA DE PUBLICACIÓN -->
+        <section id="page11" class="page" style="background-color:var(--black-grafito); --indigo-rgb:79,70,229;">
+            <div class="page-content-wrapper">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-6 text-indigo-light text-center">ESTRATEGIA DE PUBLICACIÓN</h2>
+                <div class="tech-box" style="background: rgba(20,20,30,0.7); border-color:rgba(var(--indigo-rgb),0.25)">
+                    <div class="tech-corner-decorator"></div>
+                    <h3 class="exo text-2xl font-semibold text-blue-electric mb-4">Plataformas Principales</h3>
+                    <div class="grid md:grid-cols-3 gap-4 mb-8 text-sm">
+                        <div class="p-4 rounded-md border border-indigo-original border-opacity-30 bg-indigo-dark bg-opacity-10">
+                            <h4 class="font-bold text-md text-indigo-light orbitron">Amazon KDP <span class="icon">📖</span></h4>
+                            <p class="text-gray-400"><strong class="text-gray-300">Enfoque:</strong> Comercial global.</p>
+                            <p class="text-gray-400"><strong>Detalles:</strong> Kindle + tapa blanda. Ideal para LATAM y USA.</p>
+                        </div>
+                         <div class="p-4 rounded-md border border-indigo-original border-opacity-30 bg-indigo-dark bg-opacity-10">
+                            <h4 class="font-bold text-md text-indigo-light orbitron">Reedsy <span class="icon">⭐</span></h4>
+                            <p class="text-gray-400"><strong class="text-gray-300">Enfoque:</strong> Edición profesional.</p>
+                            <p class="text-gray-400"><strong>Detalles:</strong> Corrección, maquetación y distribución premium para Europa.</p>
+                        </div>
+                         <div class="p-4 rounded-md border border-indigo-original border-opacity-30 bg-indigo-dark bg-opacity-10">
+                            <h4 class="font-bold text-md text-indigo-light orbitron">Wattpad <span class="icon">👥</span></h4>
+                            <p class="text-gray-400"><strong class="text-gray-300">Enfoque:</strong> Comunidad lectora.</p>
+                            <p class="text-gray-400"><strong>Detalles:</strong> Versión serializada, captación jóvenes lectores + feedback.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="exo text-2xl font-semibold text-blue-electric mb-3">Estrategia por Región</h3>
+                    <table class="custom-table-styled">
+                        <thead>
+                            <tr><th>Región</th><th>Enfoque</th><th>Herramientas Clave</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="text-xl mr-2">🌎</span> Latinoamérica</td><td>Construir comunidad</td><td>Wattpad, Bookstagram, Kindle</td></tr>
+                            <tr><td><span class="text-xl mr-2">🇺🇸</span> Estados Unidos</td><td>Profesional + adaptación</td><td>Reedsy, Amazon, Copyright USA</td></tr>
+                            <tr><td><span class="text-xl mr-2">🇪🇺</span> Europa</td><td>Literatura de culto</td><td>Premios sci-fi, edición premium, festivales (Utopiales)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 12: CONTACTO FINAL -->
+        <section id="page12" class="page">
+            <div class="page-content-wrapper tech-box text-center max-w-lg">
+                <div class="tech-corner-decorator"></div>
+                <h2 class="orbitron text-5xl font-bold mb-8 text-indigo-light tracking-wider">CONTACTO</h2>
+                
+                <p class="exo text-2xl mb-1 text-white">Rodrigo Príncipe</p>
+                <p class="mb-3"><a href="mailto:omarrodrigo.rp@gmail.com">omarrodrigo.rp@gmail.com</a></p>
+                <p class="mb-6 text-gray-400">Lima, Perú</p>
+                
+                <div class="qr-code-container">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://www.linkedin.com/in/oruelasprincipe/&bgcolor=14141E&color=818CF8&qzone=1" alt="QR Code LinkedIn Rodrigo Príncipe" class="mx-auto rounded">
+                </div>
+                <p class="mt-2 text-sm text-indigo-light"><a href="https://www.linkedin.com/in/oruelasprincipe/" target="_blank" rel="noopener noreferrer">Conecta en LinkedIn</a></p>
+
+                <p class="rights-note">
+                    Obra registrada bajo la Dirección de Derecho de Autor – INDECOPI (Perú) y en trámite internacional (U.S. Copyright Office).<br/>Todos los derechos reservados. © Rodrigo Príncipe
+                </p>
+                <div class="text-3xl mt-6 orbitron text-indigo-original opacity-50">
+                    LA GRIETA
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // El JavaScript es el mismo que en la respuesta anterior
+        const pages = document.querySelectorAll('.page');
+        const pageIndicators = document.querySelectorAll('.page-indicator div');
+        const container = document.querySelector('.container-snap'); // Cambiado el nombre del selector
+        let currentPage = 0; 
+
+        function updatePageIndicator(activeIndex) {
+            pageIndicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === activeIndex);
+            });
+        }
+
+        function scrollToPage(pageIndex) {
+            if (pageIndex >= 0 && pageIndex < pages.length) {
+                container.scrollTop = pages[pageIndex].offsetTop;
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                scrollToPage(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
+                scrollToPage(currentPage + 1);
+            }
+        }
+
+        pageIndicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                scrollToPage(index);
+            });
+        });
+
+        let scrollTimeout;
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                let newCurrentPage = 0;
+                let minDistance = Infinity;
+                pages.forEach((page, index) => {
+                    const distance = Math.abs(page.getBoundingClientRect().top);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        newCurrentPage = index;
+                    }
+                });
+                if (newCurrentPage !== currentPage) { // Solo actualizar si realmente cambió
+                    currentPage = newCurrentPage;
+                }
+                updatePageIndicator(currentPage); // Actualizar indicador siempre basado en la más cercana
+            }, 100); 
+        });
+        
+        function switchLanguage(lang, tabElement) {
+            const parentPage = tabElement.closest('.page');
+            parentPage.querySelectorAll('.language-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none'; // Asegurar que se oculta
+            });
+            const activeContent = parentPage.querySelector(`#bio-${lang}`);
+            if (activeContent) {
+                activeContent.classList.add('active');
+                activeContent.style.display = 'block'; // Asegurar que se muestra
+            }
+            
+            parentPage.querySelectorAll('.language-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            tabElement.classList.add('active');
+        }
+
+        // Inicializar
+        updatePageIndicator(currentPage);
+        if (pages.length > 0) {
+             container.scrollTop = pages[0].offsetTop;
+             // Forzar actualización del indicador al cargar
+             setTimeout(() => updatePageIndicator(0), 150);
+        }
+
+    </script>
+</body>
+</html>
