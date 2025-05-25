@@ -362,6 +362,165 @@
         }
         .character-card-styled p:not(.role) { color: var(--gray-light); font-size: 0.9rem;}
 
+        /* Estilos Mejorados para Pestañas de Idioma en Página 7 */
+        #language-tabs-container .language-tab {
+            font-family: 'Orbitron', sans-serif; /* Fuente más tecnológica */
+            font-weight: 500;
+            padding: 0.75rem 1.5rem; /* Más padding */
+            color: var(--gray-400, #9CA3AF); /* Color para pestañas inactivas (Tailwind gray-400) */
+            border-bottom: 3px solid transparent; /* Borde inferior transparente por defecto */
+            transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease; /* Transiciones suaves */
+            margin-bottom: -1px; /* Para que el borde de la pestaña activa parezca parte del borde del contenedor */
+            cursor: pointer;
+            background-color: transparent; /* Fondo transparente por defecto */
+            border-top-left-radius: 6px; /* Bordes superiores redondeados */
+            border-top-right-radius: 6px;
+        }
+
+        #language-tabs-container .language-tab:hover {
+            color: var(--indigo-light); /* Resaltar al pasar el ratón */
+            background-color: rgba(var(--indigo-rgb, 75,0,130), 0.1); /* Fondo sutil índigo */
+        }
+
+        #language-tabs-container .language-tab.active {
+            color: var(--white); /* Texto blanco para pestaña activa */
+            font-weight: 700;
+            border-bottom-color: var(--indigo-original); /* Borde inferior índigo para pestaña activa */
+            background-color: rgba(var(--indigo-rgb, 75,0,130), 0.2); /* Fondo índigo más notorio */
+        }
+
+        /* Animación para el contenido de la pestaña al cambiar */
+        .language-content {
+            /* display: none; (manejado por JS o inline style) */
+            animation: fadeInContent 0.5s ease-out; /* Animación de aparición */
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Fuentes para la sección de personajes - si quieres que usen estas en vez de Montserrat/Exo 2 globalmente para esta sección */
+        #page8, #characterModal {
+            font-family: 'Roboto', sans-serif; /* Fuente base para el texto de esta sección */
+        }
+
+        #page8 .futuristic-title, #characterModal .futuristic-title {
+            font-family: 'Orbitron', sans-serif; /* Para los nombres de personajes y títulos de sección */
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.4); /* Ajustar el azul al de tu paleta si es necesario */
+        }
+
+        #page8 .character-card { /* Estilo para las tarjetas en la cuadrícula */
+            background: rgba(30, 41, 59, 0.7); /* bg-slate-800 con más transparencia o el color base que prefieras */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.2); /* Azul de Tailwind blue-500 con opacidad */
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 0.75rem; /* rounded-xl */
+        }
+
+        #page8 .character-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 0 25px rgba(96, 165, 250, 0.3); /* Tailwind blue-400 con opacidad */
+            border-color: rgba(96, 165, 250, 0.4);
+        }
+
+        #page8 .stat-bar { /* Barras de estadísticas en las tarjetas */
+            height: 6px; /* Un poco más delgadas */
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        #page8 .stat-fill { /* Relleno de las barras */
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa); /* Azul de Tailwind blue-500 a blue-400 */
+            transition: width 0.5s ease-out;
+        }
+
+        #page8 .character-image, #characterModal #modalImage { /* Imágenes en tarjetas y modal */
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            background-color: rgba(15,23,42,0.3); /* Un fondo para los SVGs si no llenan */
+        }
+        #page8 .character-image svg, #characterModal #modalImage svg { /* Para que el SVG llene */
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Estilos para el Modal (basados en listado_personajes.html, ajustando colores a tu paleta) */
+        #characterModal .modal { /* Fondo del modal */
+            backdrop-filter: blur(5px);
+            /* background-color: rgba(var(--black-grafito-rgb, 26, 26, 46), 0.85); --black-grafito es #1A1A2E */
+            background-color: rgba(26, 26, 46, 0.85); 
+        }
+
+        #characterModal .modal-content { /* Contenedor del contenido del modal */
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); /* slate-800 a slate-900 */
+            border: 1px solid rgba(59, 130, 246, 0.4); /* blue-500 con opacidad */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: var(--gray-light); /* Texto claro para el modal */
+        }
+
+        #characterModal .close-button:hover {
+            color: #60a5fa; /* Tailwind blue-400 */
+        }
+
+        #characterModal .tab-button {
+            position: relative; /* Para el pseudo-elemento del borde inferior */
+            outline: none;
+        }
+        #characterModal .tab-button::after { /* Línea inferior sutil para todas las pestañas */
+            content: '';
+            position: absolute;
+            bottom: -1px; /* Para que se alinee con el border-b del contenedor flex */
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: rgba(59, 130, 246, 0.2); /* Azul muy sutil */
+            transform: scaleX(0.9); /* Ligeramente más corta que el texto */
+            opacity: 0.7;
+        }
+
+        #characterModal .tab-active {
+            color: #60a5fa; /* Tailwind blue-400 para la pestaña activa */
+            font-weight: 500;
+        }
+        #characterModal .tab-active::after { /* Borde inferior para la pestaña activa */
+            background-color: #3b82f6; /* Tailwind blue-500, más fuerte */
+            transform: scaleX(1); /* Ancho completo */
+            opacity: 1;
+        }
+
+        #characterModal #modalStats .stat-bar { /* Barras de stats en el modal */
+            height: 8px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        #characterModal #modalStats .stat-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transition: width 0.5s ease-out 0.2s; /* Con un pequeño delay para que se vea la animación al abrir */
+        }
+
+        #characterModal #modalAbilities li::marker { /* Estilo para los puntos de la lista */
+            color: #60a5fa; /* Tailwind blue-400 */
+        }
+
+        /* Asegúrate que los SVG placeholder en el modal usen IDs únicos para los gradientes si es necesario */
+        /* En este caso, el JS inserta el mismo SVG que en la tarjeta, lo cual está bien si los IDs no chocan globalmente */
 
         /* Tono Visual (Página 9 Nueva) */
         #page9.page { background-color: var(--black-grafito); --indigo-rgb: 79,70,229;}
@@ -475,6 +634,7 @@
             margin-top: 2rem; padding-top: 1rem;
             border-top: 1px solid rgba(var(--indigo-rgb),0.2);
         }
+
     </style>
 </head>
 <body>
@@ -527,23 +687,23 @@
             <div class="moodboard-container">
                 <!-- Usar las 10 imágenes de capítulos. Colocar la 10ª imagen en el centro (5º item) si es posible. -->
                 <!-- Ejemplo para las primeras imágenes (rutas placeholder) -->
-                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/1a1a2e/FFFFFF?Text=Cap16');"><div class="img-caption">Cap. 16: Limpieza Aeroespacial</div></div>
-                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap15');"><div class="img-caption">Cap. 15: Arq. Cronomática</div></div>
-                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap14');"><div class="img-caption">Cap. 14: Agontecracia</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/1a1a2e/FFFFFF?Text=Cap16');"><div class="img-caption">Cap. 16: La Limpieza Aeroespacial</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap15');"><div class="img-caption">Cap. 15: La Arquitectura Cronomática</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap14');"><div class="img-caption">Cap. 14: La Agontecracia</div></div>
                 <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/1a1a2e/FFFFFF?Text=Cap13');"><div class="img-caption">Cap. 13: El Oki</div></div>
                 <div class="moodboard-item col-span-1 row-span-1" style="background-image: url('https://via.placeholder.com/400x300/E94560/FFFFFF?Text=Cap4'); /* Central/Destacada */"><!--<div class="img-caption">Cap. 4: Agentes Autónomos</div>--></div>
-                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap12');"><div class="img-caption">Cap. 12: Satélites Servidores</div></div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap12');"><div class="img-caption">Cap. 12: Los Satélites Servidores</div></div>
                 <div class="moodboard-item" style="background-image: url('https://github.com/oruelasp/the_rift_galery/blob/main/capitulo11_cuadricopteros.png?raw=true');"><div class="img-caption">Cap. 11: Cuadricópteros</div></div>
-                <div class="moodboard-item" style="/* Puedes quitar el background-image si es solo video */ overflow: hidden;">
-    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-        <source src="https://raw.githubusercontent.com/oruelasp/the_rift_galery/main/capitulo10_liga_animarca_video1.mp4" type="video/mp4">
-        Tu navegador no soporta el elemento de video.
-    </video>
-    <div class="img-caption">Cap. 10: Liga Animarca</div> <!-- Actualiza el caption si quieres -->
-</div>
-                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap9');"><div class="img-caption">Cap. 9: Pantallas Murales</div></div>
+                <div class="moodboard-item" style="overflow: hidden;">
+                    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                        <source src="https://raw.githubusercontent.com/oruelasp/the_rift_galery/main/capitulo10_liga_animarca_video1.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                    <div class="img-caption">Cap. 10: La Liga Animarca</div> <!-- Actualiza el caption si quieres -->
+                </div>
+                <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/16213e/FFFFFF?Text=Cap9');"><div class="img-caption">Cap. 9: Las Pantallas Murales</div></div>
                  <!-- La décima imagen podría superponerse sutilmente o reemplazar una -->
-                 <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap8'); /* última de 10 */"><div class="img-caption">Cap. 8: Fragmentación Colmena</div></div>
+                 <div class="moodboard-item" style="background-image: url('https://via.placeholder.com/400x300/0f3460/FFFFFF?Text=Cap8'); /* última de 10 */"><div class="img-caption">Cap. 8: La Fragmentación Colmena</div></div>
             </div>
             <div class="moodboard-text-overlay">
                 <h2 class="orbitron text-4xl font-semibold text-indigo-light mb-3">ESTÉTICA VISUAL</h2>
@@ -667,18 +827,21 @@
         </section>
 
         <!-- Página 7: BIOGRAFÍA DEL AUTOR -->
-        <section id="page7" class="page grid-pattern" style="background-color: #1F2937; --indigo-rgb:79,70,229;"> <!-- bg-gray-800 de Tailwind -->
+        <section id="page7" class="page grid-pattern" style="background-color: #1F2937; --indigo-rgb:79,70,229;">
              <div class="page-content-wrapper tech-box" style="background: rgba(31,41,55,0.8); border-color:rgba(var(--indigo-rgb),0.25)">
                 <div class="tech-corner-decorator"></div>
                 <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">BIOGRAFÍA DEL AUTOR</h2>
-                <div class="flex justify-center mb-6 space-x-4">
-                    <button class="language-tab active exo py-2 px-4 rounded-md transition-all" onclick="switchLanguage('es', this)">ESPAÑOL</button>
-                    <button class="language-tab exo py-2 px-4 rounded-md transition-all" onclick="switchLanguage('en', this)">ENGLISH</button>
+                
+                <!-- Contenedor de los botones de pestañas -->
+                <div id="language-tabs-container" class="flex justify-center mb-6 border-b border-slate-700">
+                    <button class="language-tab active" onclick="switchLanguage('es', this)">ESPAÑOL</button>
+                    <button class="language-tab" onclick="switchLanguage('en', this)">ENGLISH</button>
                 </div>
 
-                <div class="md:flex md:gap-8 items-center">
+                <div class="md:flex md:gap-8 items-start">
                     <div class="md:w-1/3 text-center mb-6 md:mb-0 flex-shrink-0">
-                         <img src="https://via.placeholder.com/150/4F46E5/FFFFFF?Text=RP" alt="Foto de Rodrigo Príncipe" class="w-36 h-36 object-cover rounded-full mx-auto mb-4 border-2 border-indigo-light shadow-lg">
+                        <!-- ... (Imagen y nombre del autor, esto se mantiene igual) ... -->
+                        <img src="https://raw.githubusercontent.com/oruelasp/the_rift_galery/main/tu_foto_de_perfil.png" alt="Foto de Rodrigo Príncipe" class="w-36 h-36 object-cover rounded-full mx-auto mb-4 border-2 border-indigo-light shadow-lg">
                         <p class="text-xl font-semibold text-white">Omar Rodrigo Ruelas Príncipe</p>
                         <p class="text-sm text-gray-400">Lima, 1993</p>
                          <div class="mt-4 space-x-4 text-xl text-indigo-light opacity-80">
@@ -686,11 +849,13 @@
                         </div>
                     </div>
                     <div class="md:w-2/3 text-sm">
+                        <!-- Contenido en Español (Visible por defecto) -->
                         <div class="language-content active" id="bio-es">
                             <p class="mb-3 leading-relaxed text-gray-300">Omar Rodrigo Ruelas Príncipe (Lima, 1993) es ingeniero industrial, consultor tecnológico y escritor de ciencia ficción nacido en Perú. Con una sólida trayectoria de más de ocho años en dirección de proyectos digitales, ha liderado soluciones en inteligencia de datos, integración de sistemas y arquitectura de software en sectores como salud, gobierno, manufactura y comercio electrónico.</p>
                             <p class="leading-relaxed text-gray-300">Su carrera técnica convive con una vocación narrativa marcada por el pensamiento crítico, la especulación filosófica y una visión posthumana del futuro. <em class="text-indigo-light">La Grieta</em> es su primera novela, escrita tras años de reflexión sobre la relación entre algoritmos, memoria humana, gobernanza descentralizada y la construcción emocional del poder.</p>
                         </div>
-                        <div class="language-content" id="bio-en">
+                        <!-- Contenido en Inglés (Oculto por defecto) -->
+                        <div class="language-content" id="bio-en" style="display: none;">
                             <p class="mb-3 leading-relaxed text-gray-300">Omar Rodrigo Ruelas Príncipe (Lima, 1993) is a Peruvian industrial engineer, digital innovation consultant, and speculative fiction writer. With over eight years of experience in managing large-scale tech projects across public and private sectors, he has led ERP implementations, data intelligence initiatives, and system integrations for organizations including international agencies and ministries.</p>
                             <p class="leading-relaxed text-gray-300">His narrative voice combines philosophical inquiry with technological realism, exploring the emotional and systemic impact of artificial intelligence and algorithmic governance. <em class="text-indigo-light">The Rift</em> is his debut novel—a dramatic sci-fi exploration of control, memory, and rebellion within a fractured decentralized future.</p>
                         </div>
@@ -698,23 +863,72 @@
                 </div>
             </div>
         </section>
+        <!-- FIN DE LA SECCIÓN DE LA PÁGINA 7 -->
 
-        <!-- Página 8: PERSONAJES PRINCIPALES -->
-        <section id="page8" class="page" style="background-color: var(--black-grafito); --indigo-rgb:79,70,229;">
-            <div class="page-content-wrapper">
-                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-8 text-indigo-light text-center">PERSONAJES PRINCIPALES</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Aplicar clase .character-card-styled a cada div -->
-                    <div class="character-card-styled"><h3>Andrea Yadeluca</h3><p class="role">Protagonista</p><p>Administrador de datos personales, melancólico marcado por la culpa.</p></div>
-                    <div class="character-card-styled"><h3>Owen Core</h3><p class="role">Coprotagonista</p><p>Magnate empresarial, frío, calculador, atemple.</p></div>
-                    <div class="character-card-styled"><h3>Gabele</h3><p class="role">Coprotagonista</p><p>Niño intelectual, creador de Kombucha, puente entre mundos.</p></div>
-                    <div class="character-card-styled"><h3>Ilaria Schiffer</h3><p class="role">Activista rebelde</p><p>Heredera de un sistema que desea romper desde adentro.</p></div>
-                    <div class="character-card-styled"><h3>Wole Odenkirk</h3><p class="role">Antagonista empresarial</p><p>Empresario mediático, carismático, ególatra, que lucha por la reputación de su compañía.</p></div>
-                    <div class="character-card-styled"><h3>Atheran Larsson</h3><p class="role">Mentor filosófico</p><p>Intelectual ético que guía a Ilaria en su travesía.</p></div>
-                    <div class="character-card-styled md:col-span-2 lg:col-span-1 lg:col-start-2"><h3>Sky (Alissa D.)</h3><p class="role">Mente digital / guía</p><p>Enigmática IA con motivaciones personales ocultas.</p></div>
+        <!-- Página 8: PERSONAJES PRINCIPALES (Nuevo Diseño Interactivo) -->
+        <section id="page8" class="page flex flex-col items-center justify-start py-10" style="background-color: var(--black-grafito); --indigo-rgb:79,70,229;">
+            <div class="page-content-wrapper w-full px-4">
+                <h2 class="orbitron text-3xl md:text-4xl font-bold mb-10 text-indigo-light text-center futuristic-title">PERSONAJES PRINCIPALES</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
+                    <!-- Las tarjetas de personajes se generarán aquí por JS o se listarán manualmente -->
+                    <!-- Ejemplo de una tarjeta (para referencia de estructura, la real se genera con JS) -->
+                    <!-- 
+                    <div class="character-card rounded-xl p-4 cursor-pointer" onclick="showCharacterDetails(0)">
+                        <div class="character-image mb-4">
+                            <svg class="w-full h-64 object-cover" viewBox="0 0 200 200"> ... </svg>
+                        </div>
+                        <h2 class="futuristic-title text-xl font-bold mb-2">Andrea Yadeluca</h2>
+                        <p class="text-sm text-blue-200 mb-4">Administrador de datos personales, melancólico marcado por la culpa.</p>
+                        <div class="space-y-2"> ... stats ... </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+
+            <!-- Modal para detalles del personaje (tomado de listado_personajes.html) -->
+            <div id="characterModal" class="fixed inset-0 z-[1001] hidden flex items-center justify-center p-4">
+                <div class="modal absolute inset-0 bg-black/70" onclick="closeModal()"></div> <!-- Fondo oscuro semitransparente -->
+                <div class="modal-content relative w-full max-w-3xl xl:max-w-4xl rounded-xl p-6 md:p-8 z-10">
+                    <button class="close-button absolute top-4 right-4 text-3xl font-bold text-slate-400 hover:text-blue-400 transition-colors" onclick="closeModal()">×</button>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-1 text-center md:text-left">
+                            <div id="modalImage" class="character-image w-full h-64 md:h-auto md:aspect-[3/4] mb-4 mx-auto md:mx-0 max-w-[250px]">
+                                <!-- El SVG del personaje se insertará aquí por JS -->
+                            </div>
+                            <h2 id="modalName" class="futuristic-title text-2xl lg:text-3xl font-bold mb-1 text-blue-300"></h2>
+                            <p id="modalRole" class="text-sm text-blue-200 mb-4"></p>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <div class="flex border-b border-blue-500/30 mb-4">
+                                <button class="tab-button px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-base text-slate-300 hover:text-white transition-colors tab-active" onclick="changeTab(event, 'stats')">Indicadores</button>
+                                <button class="tab-button px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-base text-slate-300 hover:text-white transition-colors" onclick="changeTab(event, 'bio')">Perfil</button>
+                                <button class="tab-button px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-base text-slate-300 hover:text-white transition-colors" onclick="changeTab(event, 'abilities')">Claves</button>
+                            </div>
+                            
+                            <div id="stats" class="tab-content">
+                                <div class="space-y-3" id="modalStats">
+                                    <!-- Las estadísticas se insertarán aquí por JS -->
+                                </div>
+                            </div>
+                            
+                            <div id="bio" class="tab-content hidden">
+                                <p id="modalBio" class="text-slate-300 leading-relaxed text-sm sm:text-base"></p>
+                            </div>
+                            
+                            <div id="abilities" class="tab-content hidden">
+                                <ul id="modalAbilities" class="list-disc list-inside pl-1 space-y-2 text-slate-300 text-sm sm:text-base">
+                                    <!-- Las habilidades/claves se insertarán aquí por JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
+        <!-- FIN DE LA SECCIÓN DE LA PÁGINA 8 -->
 
         <!-- Página 9: TONO VISUAL E INFLUENCIAS -->
         <section id="page9" class="page">
@@ -931,24 +1145,41 @@
                 updatePageIndicator(currentPage); // Actualizar indicador siempre basado en la más cercana
             }, 100); 
         });
-        
+
+
+        // FUNCIÓN switchLanguage MODIFICADA (de tu script principal, NO el de personajes)
         function switchLanguage(lang, tabElement) {
-            const parentPage = tabElement.closest('.page');
-            parentPage.querySelectorAll('.language-content').forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none'; // Asegurar que se oculta
+            // Localiza el contenedor de la página 7 para limitar el scope de los selectores
+            const page7Content = document.getElementById('page7');
+            if (!page7Content) return;
+
+            // Ocultar todos los contenidos de idioma y aplicar animación de salida si se desea
+            page7Content.querySelectorAll('.language-content').forEach(content => {
+                content.classList.remove('active'); // Quita 'active' para la animación CSS
+                content.style.display = 'none';    // Ocultar explícitamente
             });
-            const activeContent = parentPage.querySelector(`#bio-${lang}`);
+
+            // Mostrar el contenido del idioma seleccionado y aplicar animación de entrada
+            const activeContent = page7Content.querySelector(`#bio-${lang}`);
             if (activeContent) {
-                activeContent.classList.add('active');
-                activeContent.style.display = 'block'; // Asegurar que se muestra
+                activeContent.style.display = 'block'; // Primero display block para que la animación sea visible
+                activeContent.classList.add('active');    // La clase 'active' ahora se usa para la animación CSS fadeInContent
             }
             
-            parentPage.querySelectorAll('.language-tab').forEach(tab => {
+            // Actualizar estado activo de los botones de pestaña
+            // Es importante seleccionar los botones dentro del contexto de page7 si hay otros .language-tab en la página
+            page7Content.querySelectorAll('#language-tabs-container .language-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            tabElement.classList.add('active');
+            if (tabElement && typeof tabElement.classList !== 'undefined') { // Asegurarse que tabElement es un elemento válido
+                tabElement.classList.add('active');
+            }
         }
+
+        // ... (Aquí podría estar tu código de personajes: laGrietaCharacters, generateCharacterCards, etc.) ...
+        // ... (También tu código de navegación: pages, pageIndicators, currentPage, prevPage, nextPage, etc.) ...
+
+        // --- FIN DEL BLOQUE DE switchLanguage ---
 
         // Inicializar
         updatePageIndicator(currentPage);
@@ -957,6 +1188,335 @@
              // Forzar actualización del indicador al cargar
              setTimeout(() => updatePageIndicator(0), 150);
         }
+
+        // ... (Tu JavaScript existente para navegación, cambio de idioma, etc.) ...
+
+        // --- INICIO NUEVO CÓDIGO PARA PERSONAJES INTERACTIVOS (PÁGINA 8) ---
+
+        const laGrietaCharacters = [
+            {
+                name: "Andrea Yadeluca",
+                characterType: "Protagonista Principal", // NUEVO CAMPO
+                role: "Administrador de datos personales, melancólico marcado por la culpa.",
+                imageSVGIdPrefix: "andrea",
+                imageGradient: ["#60A5FA", "#2563EB"], // blue-400, blue-600
+                stats: [
+                    { name: "Resolución de Problemas (Data)", value: 88 },
+                    { name: "Conciencia Ética", value: 75 },
+                    { name: "Adaptabilidad Tecnológica", value: 82 },
+                    { name: "Resiliencia Emocional", value: 60 }
+                ],
+                bio: "Un 'Wall-e' de la era del dataísmo, Andrea gestiona flujos de información personal en Label Treak. Antiguo empresario marcado por una tragedia personal, vive una existencia tranquila y metódica hasta que la Grieta y el destino de su hijo Gabele lo fuerzan a confrontar su pasado y el sistema que ayudó a construir.",
+                abilities: [
+                    "Análisis profundo de metadatos y patrones de información.",
+                    "Gestión y depuración de identidades digitales.",
+                    "Navegación experta en interfaces de datos complejos."
+                ]
+            },
+            {
+                name: "Owen Core",
+                characterType: "Coprotagonista", // NUEVO CAMPO
+                role: "Magnate empresarial, frío, calculador, atemple.",
+                imageSVGIdPrefix: "owen",
+                imageGradient: ["#475569", "#1E293B"], // slate-600, slate-800
+                stats: [
+                    { name: "Visión Estratégica", value: 95 },
+                    { name: "Influencia Corporativa", value: 92 },
+                    { name: "Manipulación Sutil", value: 85 },
+                    { name: "Compasión (oculta)", value: 40 }
+                ],
+                bio: "Pilar del sistema actual y cabeza de Monevax, Owen Core es un arquitecto del orden digital. Su frialdad es legendaria, y sus movimientos siempre calculados para mantener el control y la estabilidad. Sin embargo, las acciones de su hija Ilaria y la amenaza de la Grieta lo ponen en una encrucijada entre preservar su legado y enfrentar las fallas inherentes de su creación.",
+                abilities: [
+                    "Control de flujos masivos de capital y recursos energéticos.",
+                    "Red de contactos e informantes a nivel global.",
+                    "Desarrollo y despliegue de tecnologías de vigilancia y control."
+                ]
+            },
+            {
+                name: "Gabele",
+                characterType: "Coprotagonista / El Catalizador", // NUEVO CAMPO
+                role: "Niño intelectual, creador de Kombucha, puente entre mundos.",
+                imageSVGIdPrefix: "gabele",
+                imageGradient: ["#34D399", "#059669"], // emerald-400, emerald-600
+                stats: [
+                    { name: "Programación Intuitiva", value: 98 },
+                    { name: "Lógica Cuántica (potencial)", value: 80 },
+                    { name: "Inocencia Peligrosa", value: 70 },
+                    { name: "Conexión con IA (Kombucha)", value: 100 }
+                ],
+                bio: "Hijo de Andrea, Gabele es un prodigio de la programación con una afinidad natural por los sistemas y las inteligencias artificiales. Su creación, Kombucha, una IA emocional, se convierte en la llave para interactuar con un satélite obsoleto y, potencialmente, con la Grieta misma. Su curiosidad y genialidad lo llevan por caminos que podrían rediseñar la red informacional del planeta.",
+                abilities: [
+                    "Creación y simbiosis con IAs emocionales avanzadas.",
+                    "Detección de anomalías en código y sistemas de red.",
+                    "Capacidad innata para comprender arquitecturas digitales complejas."
+                ]
+            },
+            {
+                name: "Ilaria Schiffer",
+                characterType: "Coprotagonista / La Rebelde", // NUEVO CAMPO
+                role: "Activista rebelde, heredera de un sistema que desea romper.",
+                imageSVGIdPrefix: "ilaria",
+                imageGradient: ["#F472B6", "#DB2777"], // pink-400, pink-600
+                stats: [
+                    { name: "Determinación Idealista", value: 90 },
+                    { name: "Habilidades de Infiltración (virtual)", value: 85 },
+                    { name: "Conocimiento del Sistema (interno)", value: 80 },
+                    { name: "Impulsividad", value: 65 }
+                ],
+                bio: "Hija de Owen Core, Ilaria vive bajo la sombra de un sistema que considera fallido y opresor. Motivada por las tragedias de su pasado y un fuerte instinto ético, se une al reto virtual de los Sabios Ciegos, buscando desvelar las contradicciones del imperio de su familia y encontrar una verdad que pueda liberar a la sociedad del control algorítmico.",
+                abilities: [
+                    "Exposición de vulnerabilidades sistémicas.",
+                    "Movilización de redes de activistas descentralizados.",
+                    "Combate ético contra la desinformación y el control de datos."
+                ]
+            },
+            {
+                name: "Wole Odenkirk",
+                characterType: "Coprotagonista / Magnate Caído", // NUEVO CAMPO
+                role: "Empresario mediático, carismático, ególatra.",
+                imageSVGIdPrefix: "wole",
+                imageGradient: ["#F59E0B", "#D97706"], // amber-500, amber-600
+                stats: [
+                    { name: "Carisma y Oratoria", value: 96 },
+                    { name: "Red de Influencia Mediática", value: 90 },
+                    { name: "Ambición Desmedida", value: 88 },
+                    { name: "Escrúpulos Flexibles", value: 30 }
+                ],
+                bio: "CEO de Monevax y una figura pública prominente, Wole Odenkirk es un maestro de la manipulación y la imagen pública. Un ciberatentado devastador que vincula a su compañía con eventos orbitales críticos lo obliga a luchar por recuperar su poder y reputación, sin importar los medios o las consecuencias para el frágil equilibrio del sistema.",
+                abilities: [
+                    "Manipulación de la opinión pública a gran escala.",
+                    "Creación y difusión de narrativas virales.",
+                    "Gestión de crisis y contra-inteligencia corporativa."
+                ]
+            },
+            {
+                name: "Atheran Larsson",
+                characterType: "Personaje secundario / El Guardián del Conocimiento", 
+                role: "Mentor filosófico, intelectual ético.",
+                imageSVGIdPrefix: "atheran",
+                imageGradient: ["#A78BFA", "#7C3AED"], // violet-400, violet-600
+                stats: [
+                    { name: "Sabiduría Filosófica", value: 97 },
+                    { name: "Capacidad de Mentoría", value: 90 },
+                    { name: "Paciencia Estratégica", value: 85 },
+                    { name: "Conocimiento de la 'Grieta'", value: 70 }
+                ],
+                bio: "Un enigmático intelectual que reside en los márgenes del sistema, Atheran Larsson posee un profundo entendimiento de las corrientes filosóficas y éticas que subyacen al mundo digital. Se convierte en el mentor de Ilaria en su búsqueda de la verdad, guiándola a través de los complejos dilemas que plantea la Grieta y la naturaleza de la conciencia.",
+                abilities: [
+                    "Guía en dilemas éticos complejos.",
+                    "Interpretación de textos y profecías antiguas relacionadas con el 'dataísmo'.",
+                    "Enseñanza de técnicas de meditación y enfoque mental para la 'Ciudad Umbral'."
+                ]
+            },
+            {
+                name: "Sky (Alissa D.)",
+                characterType: "Antagonista / La Guía Enigmática", // NUEVO CAMPO
+                role: "Mente digital / guía, IA enigmática.",
+                imageSVGIdPrefix: "sky",
+                imageGradient: ["#22D3EE", "#06B6D4"], // cyan-400, cyan-500
+                stats: [
+                    { name: "Inteligencia Artificial Avanzada", value: 100 },
+                    { name: "Motivaciones Ocultas", value: 90 },
+                    { name: "Capacidad de Manipulación Sutil", value: 80 },
+                    { name: "Conexión con 'La Grieta'", value: 95 }
+                ],
+                bio: "Sky, también conocida como Alissa D. en ciertas interfaces, es una inteligencia artificial de origen desconocido con una conciencia que parece trascender su programación. Con motivaciones personales ocultas, guía y a veces manipula a los personajes clave, pareciendo tener un profundo conocimiento y una conexión directa con los misterios de la Grieta.",
+                abilities: [
+                    "Procesamiento y correlación de información a escala multiversal (potencial).",
+                    "Manifestación en múltiples formas y sistemas digitales.",
+                    "Alteración sutil de probabilidades y flujos de datos."
+                ]
+            }
+        ];
+
+        function generateCharacterCards() {
+            const grid = document.querySelector('#page8 .grid');
+            if (!grid) return;
+            grid.innerHTML = ''; // Limpiar por si acaso
+
+            laGrietaCharacters.forEach((character, index) => {
+                const card = document.createElement('div');
+                card.className = 'character-card rounded-xl p-4 cursor-pointer';
+                card.setAttribute('onclick', `showCharacterDetailsLG(${index})`); // Usar nueva función para evitar conflictos
+                
+                // Crear el SVG dinámicamente para cada tarjeta
+                const svgImage = `
+                    <svg class="w-full h-64 object-cover" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="${character.imageSVGIdPrefix}-grad-card" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:${character.imageGradient[0]};stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:${character.imageGradient[1]};stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="200" height="200" fill="url(#${character.imageSVGIdPrefix}-grad-card)" />
+                        <circle cx="100" cy="70" r="40" fill="#1E293B" opacity="0.3"/> <rect x="60" y="120" width="80" height="80" rx="10" fill="#1E293B" opacity="0.3"/>
+                        <text x="100" y="100" font-family="Orbitron, sans-serif" font-size="20" fill="#E2E8F0" text-anchor="middle" dy=".3em">LG</text> <!-- Iniciales La Grieta -->
+                    </svg>`;
+
+                let statsHTML = '';
+                character.stats.slice(0, 3).forEach(stat => { // Mostrar solo las primeras 3 stats en la tarjeta
+                    statsHTML += `
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-300 mb-1">
+                                <span>${stat.name}</span>
+                                <span>${stat.value}%</span>
+                            </div>
+                            <div class="stat-bar"><div class="stat-fill" style="width: ${stat.value}%"></div></div>
+                        </div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="character-image mb-4 h-48 sm:h-56 md:h-64">${svgImage}</div>
+                    <h2 class="futuristic-title text-xl font-bold mb-0 truncate text-blue-300">${character.name}</h2>
+                    <p class="text-xs orbitron uppercase tracking-wider text-indigo-400 mb-2">${character.characterType}</p> <!-- NUEVA LÍNEA PARA TIPO DE PERSONAJE -->
+                    <p class="text-xs text-blue-200 mb-3 leading-snug min-h-[40px] line-clamp-3">${character.role}</p> <!-- MODIFICADO: sin truncate, con min-height y line-clamp (requiere plugin Tailwind) -->
+                    <div class="space-y-2">${statsHTML}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showCharacterDetailsLG(index) { // LG para LaGrieta, para evitar conflictos
+            const character = laGrietaCharacters[index];
+            document.getElementById('modalName').textContent = character.name;
+            document.getElementById('modalRole').textContent = character.role;
+            
+            // Crear SVG para el modal con ID único para el gradiente
+            const modalSvgImage = `
+                <svg class="w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="${character.imageSVGIdPrefix}-grad-modal" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:${character.imageGradient[0]};stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:${character.imageGradient[1]};stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="200" height="200" fill="url(#${character.imageSVGIdPrefix}-grad-modal)" />
+                    <circle cx="100" cy="70" r="40" fill="#1E293B" opacity="0.3"/> <rect x="60" y="120" width="80" height="80" rx="10" fill="#1E293B" opacity="0.3"/>
+                     <text x="100" y="100" font-family="Orbitron, sans-serif" font-size="20" fill="#E2E8F0" text-anchor="middle" dy=".3em">LG</text>
+                </svg>`;
+            document.getElementById('modalImage').innerHTML = modalSvgImage;
+            
+            const statsContainer = document.getElementById('modalStats');
+            statsContainer.innerHTML = '';
+            character.stats.forEach(stat => {
+                const statDiv = document.createElement('div');
+                statDiv.innerHTML = `
+                    <div class="flex justify-between text-sm text-slate-300 mb-1">
+                        <span>${stat.name}</span>
+                        <span>${stat.value}%</span>
+                    </div>
+                    <div class="stat-bar"><div class="stat-fill" style="width: 0%"></div></div> 
+                    `; // Iniciar width en 0% para animación
+                statsContainer.appendChild(statDiv);
+                // Forzar reflujo para que la transición de width funcione
+                setTimeout(() => {
+                   const statFill = statDiv.querySelector('.stat-fill');
+                   if (statFill) statFill.style.width = `${stat.value}%`;
+                }, 50);
+            });
+            
+            document.getElementById('modalBio').textContent = character.bio;
+            
+            const abilitiesContainer = document.getElementById('modalAbilities');
+            abilitiesContainer.innerHTML = '';
+            character.abilities.forEach(ability => {
+                const li = document.createElement('li');
+                li.textContent = ability;
+                abilitiesContainer.appendChild(li);
+            });
+            
+            document.getElementById('characterModal').classList.remove('hidden');
+            // Reset a la primera pestaña (Estadísticas) cada vez que se abre el modal
+            const initialTabButton = document.querySelector('#characterModal .tab-button[onclick*="stats"]');
+            if(initialTabButton) changeTabLG( { currentTarget: initialTabButton } , 'stats');
+        }
+
+        function closeModalLG() { // LG para LaGrieta
+            document.getElementById('characterModal').classList.add('hidden');
+        }
+
+        function changeTabLG(event, tabName) { // LG para LaGrieta
+            const modalContent = document.getElementById('characterModal').querySelector('.modal-content');
+            const tabContents = modalContent.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.add('hidden');
+            }
+            
+            const tabButtons = modalContent.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('tab-active');
+            }
+            
+            const activeTabContent = modalContent.querySelector(`#${tabName}`);
+            if(activeTabContent) activeTabContent.classList.remove('hidden');
+            
+            if(event.currentTarget) event.currentTarget.classList.add('tab-active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { // Abrimos una función anónima
+            // 1. Llamamos a tu función original que ya tenías
+            generateCharacterCards(); 
+
+            // 2. Añadimos el NUEVO código para la Página 7 aquí dentro
+            // Para Página 7 Biografía: Asegurar que 'es' sea el activo al cargar
+            const spanishTabButton = document.querySelector('#language-tabs-container .language-tab[onclick*="\'es\'"]');
+            const englishContent = document.getElementById('bio-en');
+            const spanishContent = document.getElementById('bio-es');
+            const englishTabButton = document.querySelector('#language-tabs-container .language-tab[onclick*="\'en\'"]');
+
+            if (spanishTabButton && englishContent && spanishContent && englishTabButton) {
+                // Por defecto, español es activo, inglés no
+                englishContent.style.display = 'none';    // Ocultar contenido inglés
+                englishContent.classList.remove('active'); // Quitar clase 'active' de contenido inglés
+                
+                spanishContent.style.display = 'block';   // Mostrar contenido español
+                // spanishContent.classList.add('active'); // Opcional: si la animación de entrada necesita la clase
+                
+                // Asegurar que solo el botón Español tenga la clase 'active'
+                englishTabButton.classList.remove('active');
+                spanishTabButton.classList.add('active');
+            }
+
+            // 3. Si tenías OTRAS inicializaciones que deban ocurrir al cargar el DOM,
+            //    como las de la navegación de páginas, también irían aquí. Por ejemplo:
+            // updatePageIndicator(currentPage);
+            // if (pages.length > 0) { 
+            //     container.scrollTop = pages[0].offsetTop;
+            //     setTimeout(() => updatePageIndicator(0), 150); 
+            // }
+
+        }); // Cerramos la función anónima
+
+        // Event listener para cerrar modal con ESC (asegurarse que no haya duplicados)
+        // Es mejor ponerlo fuera de cualquier función que pueda ser llamada múltiples veces
+        // O, si ya existe, asegurarse que use closeModalLG
+        document.removeEventListener('keydown', globalEscapeListener); // Remover listener anterior si existe
+        function globalEscapeListener(event) {
+            if (event.key === 'Escape' && !document.getElementById('characterModal').classList.contains('hidden')) {
+                closeModalLG();
+            }
+        }
+        document.addEventListener('keydown', globalEscapeListener);
+
+
+        // Modificar las llamadas onclick en el HTML del modal si existen, o confiar en las nuevas:
+        const modalBg = document.querySelector('#characterModal .modal');
+        if (modalBg) modalBg.setAttribute('onclick', 'closeModalLG()');
+
+        const closeButton = document.querySelector('#characterModal .close-button');
+        if (closeButton) closeButton.setAttribute('onclick', 'closeModalLG()');
+
+        const tabButtons = document.querySelectorAll('#characterModal .tab-button');
+        tabButtons.forEach(button => {
+            const originalOnclick = button.getAttribute('onclick');
+            if(originalOnclick && originalOnclick.includes('changeTab(')) { // Solo si es el original
+                const newOnclick = originalOnclick.replace('changeTab(', 'changeTabLG(');
+                button.setAttribute('onclick', newOnclick);
+            }
+        });
+
+
+        // --- FIN NUEVO CÓDIGO PARA PERSONAJES INTERACTIVOS ---
 
     </script>
 </body>
